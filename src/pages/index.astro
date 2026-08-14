@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BookingLink from '../components/BookingLink.astro';
+import SeasonalPromo from '../components/SeasonalPromo.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <BaseLayout>
@@ -12,6 +13,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <p class="eyebrow">Welcome to Hillary Faye Design</p>
     <p class="lede">Personal designer cuts and beautiful dimensional color, thoughtfully created to feel like the very best version of you.</p>
   </section>
+  <SeasonalPromo
+    id="back-to-school-special"
+    image={`${base}/images/back-to-school-special-v2.jpg`}
+    imageAlt="Back to School Special: luxe partial with gloss, cut and style with Josie for $177, August 12 through September 12"
+    eyebrow="Seasonal offer · August 12–September 12"
+    heading="A little extra gloss for the season."
+    buttonLabel="Book the $177 special"
+    finePrint="Offer valid Aug 12–Sep 12 only with stylist Josie."
+    expiresAt="2026-09-13T00:00:00-07:00"
+  />
   <section class="split">
     <div class="split-image"><img src={`${base}/images/responsive/salon-900.webp`} srcset={`${base}/images/responsive/salon-480.webp 480w, ${base}/images/responsive/salon-900.webp 900w, ${base}/images/salon.webp 1169w`} sizes="(max-width: 760px) 100vw, 54vw" width="1169" height="1752" alt="Inside the Hillary Faye Design salon" loading="lazy" decoding="async" /></div>
     <div class="split-copy"><p class="eyebrow">A little luxury</p><h2>Come as you are. Leave glowing.</h2><p>We believe great hair starts with listening. Every appointment is personal, relaxed, and shaped around your style, your routine, and where you want to go next.</p><a href={`${base}/our-services`}>Explore our services →</a></div>

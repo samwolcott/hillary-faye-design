@@ -1,0 +1,122 @@
+---
+import BookingLink from './BookingLink.astro';
+
+interface Props {
+  id: string;
+  image: string;
+  imageAlt: string;
+  eyebrow: string;
+  heading: string;
+  buttonLabel: string;
+  finePrint: string;
+  expiresAt: string;
+}
+
+const {
+  id,
+  image,
+  imageAlt,
+  eyebrow,
+  heading,
+  buttonLabel,
+  finePrint,
+  expiresAt,
+} = Astro.props;
+---
+
+<section class="promo-ad" id={id} aria-labelledby={`${id}-title`} data-expires-at={expiresAt}>
+  <div class="promo-ad-copy">
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 id={`${id}-title`}>{heading}</h2>
+    <div class="promo-ad-action">
+      <BookingLink class="button">{buttonLabel}</BookingLink>
+      <p>{finePrint}</p>
+    </div>
+  </div>
+  <img src={image} width="1984" height="793" alt={imageAlt} loading="lazy" decoding="async" />
+</section>
+
+<script is:inline define:vars={{ id, expiresAt }}>
+  if (Date.now() >= new Date(expiresAt).getTime()) {
+    document.getElementById(id)?.remove();
+  }
+</script>
+
+<style>
+  .promo-ad {
+    margin: 0 clamp(1.25rem, 4vw, 4.5rem) clamp(5rem, 10vw, 10rem);
+    background: var(--white);
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 70px rgba(36, 35, 31, .08);
+  }
+
+  .promo-ad img {
+    width: 100%;
+    height: auto;
+  }
+
+  .promo-ad-copy {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .promo-ad-copy .eyebrow {
+    margin: 0;
+    color: #08706d;
+  }
+
+  .promo-ad-copy h2 {
+    max-width: 560px;
+    margin: 0 auto 0 0;
+    font-size: clamp(1.75rem, 3vw, 3rem);
+  }
+
+  .promo-ad-action {
+    flex: 0 0 auto;
+    text-align: center;
+  }
+
+  .promo-ad-action :global(.button) {
+    flex: 0 0 auto;
+  }
+
+  .promo-ad-action p {
+    max-width: 230px;
+    margin: .65rem auto 0;
+    color: rgba(36, 35, 31, .7);
+    font-size: .65rem;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 760px) {
+    .promo-ad {
+      margin-bottom: 5rem;
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .promo-ad img {
+      min-height: 300px;
+      object-fit: cover;
+      object-position: 42% center;
+    }
+
+    .promo-ad-copy {
+      align-items: stretch;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .promo-ad-copy h2 {
+      margin: 0;
+    }
+
+    .promo-ad-action,
+    .promo-ad-action :global(.button) {
+      width: 100%;
+    }
+  }
+</style>
