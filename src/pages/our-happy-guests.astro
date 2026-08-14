@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const quotes = [
   ["Hillary can flat out do hair! She was confident and did exactly what I asked. She also recommended products to improve the health of my hair and explained what each would do. I couldn’t be happier with the results!", 'Melissa J.'],
   ["Hope was a joy to have do my hair. She is knowledgeable, listened to my ideas, and gave me something I love. The salon is so cute and welcoming—even for the kids. We will be back for sure.", 'Kristal S.'],
@@ -9,7 +10,7 @@ const quotes = [
 <BaseLayout title="Happy Guests | Hillary Faye Design" description="Read what guests say and see hair created at Hillary Faye Design in Sumner, WA.">
   <header class="page-hero"><p class="eyebrow">Kind words & good hair</p><h1>Our happy guests</h1></header>
   <section class="quotes section">{quotes.map(([quote,author], i) => <figure class:list={{feature:i===0}}><blockquote>“{quote}”</blockquote><figcaption>— {author}</figcaption></figure>)}</section>
-  <section class="gallery" aria-label="Guest gallery">{Array.from({length:6},(_,i) => <img src={`/images/guest-${i+1}.webp`} alt={`Hair design by Hillary Faye Design, gallery image ${i+1}`} loading="lazy" />)}</section>
+  <section class="gallery" aria-label="Guest gallery">{Array.from({length:6},(_,i) => <img src={`${base}/images/guest-${i+1}.webp`} alt={`Hair design by Hillary Faye Design, gallery image ${i+1}`} loading="lazy" />)}</section>
   <section class="visit section"><p class="eyebrow">Your turn</p><h2>Good hair days start here.</h2><a class="button" href="#book-now">Book your visit</a></section>
 </BaseLayout>
 <style>
