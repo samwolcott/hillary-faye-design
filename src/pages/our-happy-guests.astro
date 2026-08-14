@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const quotes = [
+  ["Hillary can flat out do hair! She was confident and did exactly what I asked. She also recommended products to improve the health of my hair and explained what each would do. I couldn’t be happier with the results!", 'Melissa J.'],
+  ["Hope was a joy to have do my hair. She is knowledgeable, listened to my ideas, and gave me something I love. The salon is so cute and welcoming—even for the kids. We will be back for sure.", 'Kristal S.'],
+  ["Been getting my haircut by Hillary for years. Always a great cut!", 'Bruce M.'],
+];
+---
+<BaseLayout title="Happy Guests | Hillary Faye Design" description="Read what guests say and see hair created at Hillary Faye Design in Sumner, WA.">
+  <header class="page-hero"><p class="eyebrow">Kind words & good hair</p><h1>Our happy guests</h1></header>
+  <section class="quotes section">{quotes.map(([quote,author], i) => <figure class:list={{feature:i===0}}><blockquote>“{quote}”</blockquote><figcaption>— {author}</figcaption></figure>)}</section>
+  <section class="gallery" aria-label="Guest gallery">{Array.from({length:6},(_,i) => <img src={`/images/guest-${i+1}.webp`} alt={`Hair design by Hillary Faye Design, gallery image ${i+1}`} loading="lazy" />)}</section>
+  <section class="visit section"><p class="eyebrow">Your turn</p><h2>Good hair days start here.</h2><a class="button" href="#book-now">Book your visit</a></section>
+</BaseLayout>
+<style>
+  .quotes{display:grid;grid-template-columns:1fr 1fr;gap:5rem}.quotes figure{margin:0;border-top:1px solid var(--line);padding-top:2rem}.quotes .feature{grid-row:span 2}.quotes blockquote{font-family:'Italiana',serif;font-size:clamp(1.45rem,2.4vw,2.4rem);line-height:1.45;margin:0 0 1.5rem}.feature blockquote{font-size:clamp(2rem,3.5vw,3.5rem)}figcaption{text-transform:uppercase;letter-spacing:.15em;font-size:.7rem}.gallery{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:420px;gap:.5rem;padding:.5rem}.gallery img{width:100%;height:100%;object-fit:cover}.gallery img:nth-child(2),.gallery img:nth-child(6){grid-row:span 2}.visit{text-align:center}.visit h2{margin-bottom:2.5rem}@media(max-width:760px){.quotes{grid-template-columns:1fr;gap:3rem}.gallery{grid-template-columns:1fr 1fr;grid-auto-rows:280px}}
+</style>

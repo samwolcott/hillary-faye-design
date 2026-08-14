@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Book an Appointment | Hillary Faye Design" description="Request or schedule your next hair appointment at Hillary Faye Design in Sumner, WA.">
+  <header class="page-hero"><p class="eyebrow">We can’t wait to meet you</p><h1>Request an appointment.</h1></header>
+  <section class="booking section">
+    <div class="booking-card"><p class="eyebrow">Existing guests</p><h2>Welcome back.</h2><p>Choose your next service and schedule your appointment online.</p><a class="button" href="#book-now">Book appointment</a></div>
+    <div class="booking-card warm"><p class="eyebrow">New guests</p><h2>Let’s start a conversation.</h2><p>Tell us about your hair, what you’re looking for, and your availability. Please allow up to 48 hours for Hillary to respond.</p><p class="small">A $50 non-refundable booking fee reserves your appointment and is applied to your service on the day of your visit.</p><a class="button" href="mailto:info@hillaryfayedesign.com?subject=New%20guest%20appointment%20request">Request an appointment</a></div>
+  </section>
+  <section class="josie"><div><p class="eyebrow">Looking for Josie Mae?</p><h2>Join the new-client waiting list.</h2></div><a class="button button-light" href="mailto:info@hillaryfayedesign.com?subject=Josie%20Mae%20waiting%20list">Sign up here</a></section>
+</BaseLayout>
+<style>.booking{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}.booking-card{background:var(--paper);padding:clamp(2.5rem,6vw,6rem)}.booking-card.warm{background:var(--cream)}.booking-card h2{font-size:clamp(2.6rem,4.5vw,4.6rem)}.booking-card p{max-width:580px}.booking-card .small{font-size:.8rem;margin:2rem 0}.booking-card .button{margin-top:1.5rem}.josie{padding:4rem clamp(1.25rem,6vw,7rem);background:var(--clay);color:white;display:flex;justify-content:space-between;align-items:center;gap:2rem}.josie h2{font-size:clamp(2rem,4vw,4rem);margin:0}@media(max-width:760px){.booking{grid-template-columns:1fr}.josie{align-items:flex-start;flex-direction:column}}</style>

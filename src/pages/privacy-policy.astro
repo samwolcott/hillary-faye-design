@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import privacyPolicyHtml from '../content/privacy-policy.html?raw';
+---
+<BaseLayout title="Privacy Policy | Hillary Faye Design" description="Privacy policy for Hillary Faye Design LLC.">
+  <article class="section narrow legal termly-policy" set:html={privacyPolicyHtml}>
+  </article>
+</BaseLayout>
+<style>
+  .legal{font-size:.95rem;overflow-wrap:anywhere}
+  .legal :global([data-custom-class='title'] h1){font-family:'Italiana',serif;font-size:clamp(3.5rem,8vw,7rem);line-height:.95;text-transform:none;color:var(--ink);margin-bottom:1rem}
+  .legal :global([data-custom-class='subtitle']){display:block;color:color-mix(in srgb,var(--ink) 65%,transparent);margin-bottom:4rem}
+  .legal :global([data-custom-class='heading_1'] h2){font-family:'DM Sans',sans-serif;font-size:1rem;line-height:1.45;text-transform:uppercase;letter-spacing:.12em;color:var(--ink);margin:3.5rem 0 1rem}
+  .legal :global([data-custom-class='heading_2'] h3){font-family:'DM Sans',sans-serif;font-size:.9rem;line-height:1.45;text-transform:uppercase;letter-spacing:.1em;color:var(--ink);margin:2.25rem 0 .75rem}
+  .legal :global([data-custom-class='body_text']){color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.9rem;line-height:1.7}
+  .legal :global([data-custom-class='link']){color:var(--clay);font-family:'DM Sans',sans-serif;font-size:inherit;word-break:break-word}
+  .legal :global(ul){list-style-type:square;padding-left:1.35rem}
+  .legal :global(ul ul){list-style-type:circle}
+  .legal :global(ul ul ul){list-style-type:square}
+  .legal :global(ol){padding-left:1.35rem}
+  .legal :global(table){display:block;max-width:100%;overflow-x:auto;border-collapse:collapse}
+  .legal :global(td),.legal :global(th){border:1px solid var(--line);padding:.75rem;vertical-align:top}
+</style>

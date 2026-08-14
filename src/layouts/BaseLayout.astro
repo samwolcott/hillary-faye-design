@@ -1,0 +1,92 @@
+---
+import '../styles/global.css';
+interface Props { title?: string; description?: string; }
+const { title = 'Hillary Faye Design', description = 'Personal designer haircuts and beautiful dimensional color in Sumner, Washington.' } = Astro.props;
+const currentPath = Astro.url.pathname;
+const nav = [
+  ['/our-services', 'Our Services'],
+  ['/about', 'Our Story'],
+  ['/our-happy-guests', 'Our Happy Guests'],
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f2eee7" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={new URL('/images/hero.webp', Astro.site)} />
+    <title>{title}</title>
+    <!-- Boulevard Self-Booking overlay -->
+    <script is:inline>
+      (function (a) {
+        var b = {
+          businessId: 'e2268497-1ec6-4515-8d8d-a0afd7dd6855',
+        };
+
+        var c = a.createElement('script');
+        var d = a.querySelector('script');
+
+        c.src = 'https://static.joinboulevard.com/injector.min.js';
+        c.async = true;
+        c.onload = function () {
+          blvd.init(b);
+        };
+
+        d.parentNode.insertBefore(c, d);
+      })(document);
+    </script>
+    <!-- End Boulevard Self-Booking overlay -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Hillary Faye Design home">
+        <img src="/images/logo.webp" width="170" height="101" alt="Hillary Faye Design" />
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><span class="sr-only">Menu</span></button>
+      <nav id="site-nav" aria-label="Main navigation">
+        {nav.map(([href, label]) => <a href={href} aria-current={currentPath === href ? 'page' : undefined}>{label}</a>)}
+        <a class="button button-small" href="#book-now">Book appointment</a>
+      </nav>
+    </header>
+    <main id="main"><slot /></main>
+    <footer>
+      <div class="footer-grid">
+        <div><p class="eyebrow">Follow along</p><a href="https://www.instagram.com/hillaryfayedesign/" target="_blank" rel="noreferrer">Instagram</a><br /><a href="https://www.facebook.com/hillaryfayedesign/" target="_blank" rel="noreferrer">Facebook</a></div>
+        <div><p class="eyebrow">Hours</p><p>Monday / Thursday<br />7:30am–11:30am</p><p>Tuesday / Friday<br />11:30am–7:30pm</p></div>
+        <div><p class="eyebrow">Visit</p><p><a href="https://www.google.com/maps/search/?api=1&query=Hillary+Faye+Design%2C+816+Cherry+Ave+Unit+4B%2C+Sumner%2C+WA+98390" target="_blank" rel="noreferrer" aria-label="Open Hillary Faye Design in Google Maps">816 Cherry Ave, Unit 4B<br />Sumner, WA 98390</a></p><a href="mailto:info@hillaryfayedesign.com">info@hillaryfayedesign.com</a><br /><a href="tel:+18336431571">1-833-643-1571</a></div>
+      </div>
+      <div class="footer-bottom"><span>© {new Date().getFullYear()} Hillary Faye Design</span><a href="/privacy-policy">Privacy policy</a></div>
+    </footer>
+    <script is:inline>
+      const button = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('#site-nav');
+      button?.addEventListener('click', () => {
+        const open = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', String(!open));
+        nav?.classList.toggle('open', !open);
+      });
+
+      document.addEventListener('click', (event) => {
+        const bookingLink = event.target.closest('a[href="#book-now"]');
+        if (!bookingLink) return;
+
+        button?.setAttribute('aria-expanded', 'false');
+        nav?.classList.remove('open');
+
+        if (window.matchMedia('(max-width: 760px)').matches && window.blvd?.openBookingWidget) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          window.blvd.openBookingWidget();
+        }
+      }, true);
+    </script>
+  </body>
+</html>
