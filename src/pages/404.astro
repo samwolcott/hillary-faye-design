@@ -2,5 +2,5 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
-<BaseLayout title="Page Not Found | Hillary Faye Design"><section class="section narrow error"><p class="eyebrow">404</p><h1>That page has moved on.</h1><p>Let’s get you back to the salon.</p><a class="button" href={`${base}/`}>Return home</a></section></BaseLayout>
+<BaseLayout title="Page Not Found | Hillary Faye Design" robots="noindex, follow"><section class="section narrow error"><p class="eyebrow">404</p><h1>That page has moved on.</h1><p>Let’s get you back to the salon.</p><a class="button" href={`${base}/`}>Return home</a></section></BaseLayout>
 <style>.error{text-align:center;min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center}.error h1{font-size:clamp(3rem,7vw,7rem)}.error .button{margin-top:1.5rem}</style>

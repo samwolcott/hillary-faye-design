@@ -1,10 +1,50 @@
 ---
 import '../styles/global.css';
-interface Props { title?: string; description?: string; }
-const { title = 'Hillary Faye Design', description = 'Personal designer haircuts and beautiful dimensional color in Sumner, Washington.' } = Astro.props;
+interface Props { title?: string; description?: string; robots?: string; image?: string; }
+const {
+  title = 'Hair Salon in Sumner, WA | Hillary Faye Design',
+  description = 'Personal designer haircuts and beautiful dimensional color at Hillary Faye Design in Sumner, Washington.',
+  robots = 'index, follow',
+  image = '/images/hero.webp',
+} = Astro.props;
 const currentPath = Astro.url.pathname;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const url = (path: string) => `${base}${path}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(url(image), Astro.site);
+const businessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HairSalon',
+  '@id': new URL('/#hair-salon', Astro.site).href,
+  name: 'Hillary Faye Design',
+  url: new URL('/', Astro.site).href,
+  logo: new URL(url('/images/logo.webp'), Astro.site).href,
+  image: new URL(url('/images/hero.webp'), Astro.site).href,
+  description: 'Personal designer haircuts and beautiful dimensional color in Sumner, Washington.',
+  telephone: '+12539482111',
+  email: 'info@hillaryfayedesign.com',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '816 Cherry Ave, Unit 4B',
+    addressLocality: 'Sumner',
+    addressRegion: 'WA',
+    postalCode: '98390',
+    addressCountry: 'US',
+  },
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Thursday'], opens: '07:30', closes: '11:30' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Tuesday', 'Friday'], opens: '11:30', closes: '19:30' },
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+12532016481',
+    contactType: 'text messaging',
+  },
+  sameAs: [
+    'https://www.instagram.com/hillaryfayedesign/',
+    'https://www.facebook.com/hillaryfayedesign/',
+  ],
+};
 const nav = [
   ['/our-services', 'Our Services'],
   ['/about', 'Our Story'],
@@ -17,13 +57,27 @@ const nav = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
     <meta name="theme-color" content="#f2eee7" />
     <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href={url('/sitemap-index.xml')} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content={new URL(url('/images/hero.webp'), Astro.site)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Hillary Faye Design" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="682" />
+    <meta property="og:image:alt" content="Dimensional blonde hair styled at Hillary Faye Design" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content="Dimensional blonde hair styled at Hillary Faye Design" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(businessSchema)}></script>
     <title>{title}</title>
     <!-- Boulevard Self-Booking overlay -->
     <script is:inline>

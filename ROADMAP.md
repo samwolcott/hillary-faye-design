@@ -32,7 +32,7 @@ External cutover checklist:
 
 ## Sprint 2 — Search identity and share previews
 
-Status: Not started
+Status: Ready for validation
 
 Goal: Give search engines and social platforms complete, consistent business and page metadata.
 

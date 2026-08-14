@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { serviceGroups } from '../data/services';
 ---
-<BaseLayout title="Hair Services | Hillary Faye Design" description="Explore haircuts, dimensional color, blonding, extensions, and treatments at Hillary Faye Design in Sumner, WA.">
+<BaseLayout title="Hair Color, Blonding & Haircuts in Sumner, WA" description="Explore haircuts, dimensional color, blonding, extensions, and treatments at Hillary Faye Design in Sumner, WA.">
   <header class="page-hero"><p class="eyebrow">The menu</p><h1>Our services</h1></header>
   <div class="services section">
     <aside><p class="eyebrow">Browse</p>{serviceGroups.map((group) => <a href={`#${group.name.toLowerCase().replaceAll(' ','-').replaceAll('&','and')}`}>{group.name}</a>)}</aside>
