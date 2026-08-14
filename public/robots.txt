@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://samwolcott.github.io/hillary-faye-design/sitemap.xml
+Sitemap: https://www.hillaryfayedesign.com/sitemap.xml
