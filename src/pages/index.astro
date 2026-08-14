@@ -24,6 +24,21 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     finePrint="Offer valid Aug 12–Sep 12 only with stylist Josie."
     expiresAt="2026-09-13T00:00:00-07:00"
   />
+  <SeasonalPromo
+    id="fall-special"
+    image={`${base}/images/fall-special-wide.jpg`}
+    mobileImage={`${base}/images/fall-special.jpg`}
+    imageWidth={1983}
+    imageHeight={793}
+    imageAlt="Fall Special with Josie: personalized designer cut and style with luxe toner enhancement, regularly $110, now $87, September 21 through October 5"
+    eyebrow="Fall special · September 21–October 5"
+    heading="Your fall refresh, thoughtfully finished."
+    buttonLabel="Book the $87 special"
+    finePrint="Offer valid Sep 21–Oct 5 only with stylist Josie."
+    startsAt="2026-09-21T00:00:00-07:00"
+    expiresAt="2026-10-06T00:00:00-07:00"
+    preview={import.meta.env.DEV}
+  />
   <section class="split">
     <div class="split-image"><img src={`${base}/images/responsive/salon-900.webp`} srcset={`${base}/images/responsive/salon-480.webp 480w, ${base}/images/responsive/salon-900.webp 900w, ${base}/images/salon.webp 1169w`} sizes="(max-width: 760px) 100vw, 54vw" width="1169" height="1752" alt="Inside the Hillary Faye Design salon" loading="lazy" decoding="async" /></div>
     <div class="split-copy"><p class="eyebrow">A little luxury</p><h2>Come as you are. Leave glowing.</h2><p>We believe great hair starts with listening. Every appointment is personal, relaxed, and shaped around your style, your routine, and where you want to go next.</p><a href={`${base}/our-services`}>Explore our services →</a></div>

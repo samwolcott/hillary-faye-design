@@ -5,28 +5,38 @@ interface Props {
   id: string;
   image: string;
   mobileImage?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  artworkShape?: 'wide' | 'square';
   imageAlt: string;
   eyebrow: string;
   heading: string;
   buttonLabel: string;
   finePrint: string;
-  expiresAt: string;
+  startsAt?: string;
+  expiresAt?: string;
+  preview?: boolean;
 }
 
 const {
   id,
   image,
   mobileImage,
+  imageWidth = 1984,
+  imageHeight = 793,
+  artworkShape = 'wide',
   imageAlt,
   eyebrow,
   heading,
   buttonLabel,
   finePrint,
-  expiresAt,
+  startsAt = null,
+  expiresAt = null,
+  preview = false,
 } = Astro.props;
 ---
 
-<section class="promo-ad" id={id} aria-labelledby={`${id}-title`} data-expires-at={expiresAt}>
+<section class:list={['promo-ad', artworkShape]} id={id} aria-labelledby={`${id}-title`} hidden={Boolean(startsAt) && !preview}>
   <div class="promo-ad-copy">
     <p class="eyebrow">{eyebrow}</p>
     <h2 id={`${id}-title`}>{heading}</h2>
@@ -37,14 +47,28 @@ const {
   </div>
   <picture>
     {mobileImage && <source media="(max-width: 760px)" srcset={mobileImage} />}
-    <img src={image} width="1984" height="793" alt={imageAlt} loading="lazy" decoding="async" />
+    <img src={image} width={imageWidth} height={imageHeight} alt={imageAlt} loading="lazy" decoding="async" />
   </picture>
 </section>
 
-<script is:inline define:vars={{ id, expiresAt }}>
-  if (Date.now() >= new Date(expiresAt).getTime()) {
-    document.getElementById(id)?.remove();
-  }
+<script is:inline define:vars={{ id, startsAt, expiresAt, preview }}>
+  const promo = document.getElementById(id);
+  const startTime = startsAt ? new Date(startsAt).getTime() : null;
+  const endTime = expiresAt ? new Date(expiresAt).getTime() : null;
+
+  const syncPromo = () => {
+    if (!promo) return;
+    const now = Date.now();
+    const hasStarted = startTime === null || now >= startTime;
+    const hasEnded = endTime !== null && now >= endTime;
+    promo.hidden = !(preview || (hasStarted && !hasEnded));
+
+    if (preview) return;
+    const nextBoundary = [startTime, endTime].find((time) => time !== null && time > now);
+    if (nextBoundary) window.setTimeout(syncPromo, Math.min(nextBoundary - now + 50, 2147483647));
+  };
+
+  syncPromo();
 </script>
 
 <style>
@@ -63,6 +87,12 @@ const {
 
   .promo-ad img {
     height: auto;
+  }
+
+  .promo-ad.square picture {
+    max-width: 760px;
+    margin-inline: auto;
+    border-top: 1px solid var(--line);
   }
 
   .promo-ad-copy {
