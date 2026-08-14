@@ -51,7 +51,7 @@ Validation gate:
 
 ## Sprint 3 — Image and delivery performance
 
-Status: Not started
+Status: Ready for validation
 
 Goal: Reduce image transfer and layout movement while preserving the site's visual quality.
 

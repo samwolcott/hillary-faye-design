@@ -7,10 +7,31 @@ const quotes = [
   ["Hope was a joy to have do my hair. She is knowledgeable, listened to my ideas, and gave me something I love. The salon is so cute and welcoming—even for the kids. We will be back for sure.", 'Kristal S.'],
   ["Been getting my haircut by Hillary for years. Always a great cut!", 'Bruce M.'],
 ];
-const gallery = Array.from({ length: 44 }, (_, index) => ({
-  src: `${base}/images/gallery/guest-${String(index + 1).padStart(3, '0')}.webp`,
-  alt: `Hair color and styling by Hillary Faye Design, guest look ${index + 1}`,
-}));
+const galleryDimensions = [
+  [1500,2000],[1500,2250],[1500,1000],[1500,2000],[1500,1500],[511,1017],[1363,1667],[1500,1505],[1125,1129],[1500,2250],[1125,767],
+  [1125,1137],[1500,2000],[1500,2000],[1125,959],[1125,1160],[1125,1158],[1125,738],[1125,1141],[1125,1452],[1125,757],[1125,1156],
+  [1500,2000],[1500,2000],[1500,1000],[1500,2000],[1500,2000],[1500,2000],[1500,2000],[1500,2000],[1500,2000],[1500,2000],[1500,2000],
+  [1500,2000],[960,960],[1500,2000],[1500,2000],[1125,1287],[1500,2000],[1500,2000],[1125,1146],[1024,1539],[1024,1539],[1024,1539],
+];
+const excludedGalleryImages = new Set([25]);
+const gallery = Array.from({ length: 44 }, (_, index) => {
+  const number = index + 1;
+  const file = `guest-${String(index + 1).padStart(3, '0')}`;
+  const [width, height] = galleryDimensions[index];
+  const src = `${base}/images/gallery/${file}.webp`;
+  const thumb400 = `${base}/images/gallery/thumbs/${file}-400.webp`;
+  const thumb800 = `${base}/images/gallery/thumbs/${file}-800.webp`;
+  const candidates = [{ src: thumb400, width: Math.min(400,width) }, { src: thumb800, width: Math.min(800,width) }, { src, width }];
+  return {
+    src,
+    thumb400,
+    srcset: candidates.filter((candidate, position) => candidates.findIndex(({ width }) => width === candidate.width) === position).map((candidate) => `${candidate.src} ${candidate.width}w`).join(', '),
+    alt: `Hair color and styling by Hillary Faye Design, guest look ${index + 1}`,
+    number,
+    width,
+    height,
+  };
+}).filter(({ number }) => !excludedGalleryImages.has(number));
 ---
 
 <BaseLayout title="Hair Salon Reviews & Gallery | Hillary Faye Design" description="Read guest reviews and explore hair color, cuts, and styling created at Hillary Faye Design in Sumner, WA.">
@@ -36,7 +57,7 @@ const gallery = Array.from({ length: 44 }, (_, index) => ({
     <div class="gallery" data-gallery>
       {gallery.map((image, index) => (
         <button class="gallery-item" type="button" data-index={index} aria-label={`Open gallery image ${index + 1} of ${gallery.length}`}>
-          <img src={image.src} alt={image.alt} loading={index < 4 ? 'eager' : 'lazy'} decoding="async" />
+          <img src={image.thumb400} srcset={image.srcset} sizes="(max-width: 760px) calc(50vw - 18px), (max-width: 1200px) 33vw, 25vw" width={image.width} height={image.height} alt={image.alt} loading="lazy" decoding="async" />
           <span aria-hidden="true">View</span>
         </button>
       ))}
@@ -47,7 +68,7 @@ const gallery = Array.from({ length: 44 }, (_, index) => ({
     <button class="lightbox-close" type="button" data-close aria-label="Close gallery">Close</button>
     <button class="lightbox-arrow lightbox-prev" type="button" data-prev aria-label="Previous image">←</button>
     <figure>
-      <img src={gallery[0].src} alt={gallery[0].alt} data-lightbox-image />
+      <img src={gallery[0].src} width={gallery[0].width} height={gallery[0].height} alt={gallery[0].alt} data-lightbox-image />
       <figcaption><span data-counter>1 / {gallery.length}</span></figcaption>
     </figure>
     <button class="lightbox-arrow lightbox-next" type="button" data-next aria-label="Next image">→</button>
@@ -68,6 +89,8 @@ const gallery = Array.from({ length: 44 }, (_, index) => ({
     const image = gallery[activeIndex];
     lightboxImage.src = image.src;
     lightboxImage.alt = image.alt;
+    lightboxImage.width = image.width;
+    lightboxImage.height = image.height;
     counter.textContent = `${activeIndex + 1} / ${gallery.length}`;
   };
   const closeLightbox = () => {
