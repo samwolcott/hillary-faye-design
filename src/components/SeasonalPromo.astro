@@ -4,6 +4,7 @@ import BookingLink from './BookingLink.astro';
 interface Props {
   id: string;
   image: string;
+  mobileImage?: string;
   imageAlt: string;
   eyebrow: string;
   heading: string;
@@ -15,6 +16,7 @@ interface Props {
 const {
   id,
   image,
+  mobileImage,
   imageAlt,
   eyebrow,
   heading,
@@ -33,7 +35,10 @@ const {
       <p>{finePrint}</p>
     </div>
   </div>
-  <img src={image} width="1984" height="793" alt={imageAlt} loading="lazy" decoding="async" />
+  <picture>
+    {mobileImage && <source media="(max-width: 760px)" srcset={mobileImage} />}
+    <img src={image} width="1984" height="793" alt={imageAlt} loading="lazy" decoding="async" />
+  </picture>
 </section>
 
 <script is:inline define:vars={{ id, expiresAt }}>
@@ -50,8 +55,13 @@ const {
     box-shadow: 0 24px 70px rgba(36, 35, 31, .08);
   }
 
+  .promo-ad picture,
   .promo-ad img {
+    display: block;
     width: 100%;
+  }
+
+  .promo-ad img {
     height: auto;
   }
 
@@ -96,12 +106,6 @@ const {
       margin-bottom: 5rem;
       display: flex;
       flex-direction: column-reverse;
-    }
-
-    .promo-ad img {
-      min-height: 300px;
-      object-fit: cover;
-      object-position: 42% center;
     }
 
     .promo-ad-copy {
