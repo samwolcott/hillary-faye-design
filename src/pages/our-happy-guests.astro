@@ -1,18 +1,103 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const quotes = [
   ["Hillary can flat out do hair! She was confident and did exactly what I asked. She also recommended products to improve the health of my hair and explained what each would do. I couldn’t be happier with the results!", 'Melissa J.'],
   ["Hope was a joy to have do my hair. She is knowledgeable, listened to my ideas, and gave me something I love. The salon is so cute and welcoming—even for the kids. We will be back for sure.", 'Kristal S.'],
   ["Been getting my haircut by Hillary for years. Always a great cut!", 'Bruce M.'],
 ];
+const gallery = Array.from({ length: 44 }, (_, index) => ({
+  src: `${base}/images/gallery/guest-${String(index + 1).padStart(3, '0')}.webp`,
+  alt: `Hair color and styling by Hillary Faye Design, guest look ${index + 1}`,
+}));
 ---
-<BaseLayout title="Happy Guests | Hillary Faye Design" description="Read what guests say and see hair created at Hillary Faye Design in Sumner, WA.">
-  <header class="page-hero"><p class="eyebrow">Kind words & good hair</p><h1>Our happy guests</h1></header>
-  <section class="quotes section">{quotes.map(([quote,author], i) => <figure class:list={{feature:i===0}}><blockquote>“{quote}”</blockquote><figcaption>— {author}</figcaption></figure>)}</section>
-  <section class="gallery" aria-label="Guest gallery">{Array.from({length:6},(_,i) => <img src={`${base}/images/guest-${i+1}.webp`} alt={`Hair design by Hillary Faye Design, gallery image ${i+1}`} loading="lazy" />)}</section>
+
+<BaseLayout title="Happy Guests | Hillary Faye Design" description="Read what guests say and explore hair color and styling created at Hillary Faye Design in Sumner, WA.">
+  <header class="page-hero">
+    <p class="eyebrow">Kind words & good hair</p>
+    <h1>Our happy guests</h1>
+  </header>
+
+  <section class="quotes section">
+    {quotes.map(([quote, author], i) => (
+      <figure class:list={{ feature: i === 0 }}>
+        <blockquote>“{quote}”</blockquote>
+        <figcaption>— {author}</figcaption>
+      </figure>
+    ))}
+  </section>
+
+  <section class="gallery-section" aria-labelledby="gallery-title">
+    <div class="gallery-heading">
+      <div><p class="eyebrow">The gallery</p><h2 id="gallery-title">Made to feel like you.</h2></div>
+      <p>Color, cuts, texture, and occasion styling from our chair. Select any look to see it up close.</p>
+    </div>
+    <div class="gallery" data-gallery>
+      {gallery.map((image, index) => (
+        <button class="gallery-item" type="button" data-index={index} aria-label={`Open gallery image ${index + 1} of ${gallery.length}`}>
+          <img src={image.src} alt={image.alt} loading={index < 4 ? 'eager' : 'lazy'} decoding="async" />
+          <span aria-hidden="true">View</span>
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <dialog class="lightbox" data-lightbox aria-label="Gallery image viewer">
+    <button class="lightbox-close" type="button" data-close aria-label="Close gallery">Close</button>
+    <button class="lightbox-arrow lightbox-prev" type="button" data-prev aria-label="Previous image">←</button>
+    <figure>
+      <img src={gallery[0].src} alt={gallery[0].alt} data-lightbox-image />
+      <figcaption><span data-counter>1 / {gallery.length}</span></figcaption>
+    </figure>
+    <button class="lightbox-arrow lightbox-next" type="button" data-next aria-label="Next image">→</button>
+  </dialog>
+
   <section class="visit section"><p class="eyebrow">Your turn</p><h2>Good hair days start here.</h2><a class="button" href="#book-now">Book your visit</a></section>
 </BaseLayout>
+
+<script is:inline define:vars={{ gallery }}>
+  const dialog = document.querySelector('[data-lightbox]');
+  const lightboxImage = document.querySelector('[data-lightbox-image]');
+  const counter = document.querySelector('[data-counter]');
+  const triggers = [...document.querySelectorAll('[data-gallery] .gallery-item')];
+  let activeIndex = 0;
+  let lastTrigger;
+  const showImage = (index) => {
+    activeIndex = (index + gallery.length) % gallery.length;
+    const image = gallery[activeIndex];
+    lightboxImage.src = image.src;
+    lightboxImage.alt = image.alt;
+    counter.textContent = `${activeIndex + 1} / ${gallery.length}`;
+  };
+  const closeLightbox = () => {
+    dialog.close();
+    document.body.classList.remove('lightbox-open');
+    lastTrigger?.focus();
+  };
+  triggers.forEach((trigger, index) => {
+    trigger.addEventListener('click', () => {
+      lastTrigger = trigger;
+      showImage(index);
+      dialog.showModal();
+      document.body.classList.add('lightbox-open');
+    });
+  });
+  document.querySelector('[data-close]').addEventListener('click', closeLightbox);
+  document.querySelector('[data-prev]').addEventListener('click', () => showImage(activeIndex - 1));
+  document.querySelector('[data-next]').addEventListener('click', () => showImage(activeIndex + 1));
+  dialog.addEventListener('click', (event) => { if (event.target === dialog) closeLightbox(); });
+  dialog.addEventListener('close', () => document.body.classList.remove('lightbox-open'));
+  dialog.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') showImage(activeIndex - 1);
+    if (event.key === 'ArrowRight') showImage(activeIndex + 1);
+  });
+</script>
+
 <style>
-  .quotes{display:grid;grid-template-columns:1fr 1fr;gap:5rem}.quotes figure{margin:0;border-top:1px solid var(--line);padding-top:2rem}.quotes .feature{grid-row:span 2}.quotes blockquote{font-family:'Italiana',serif;font-size:clamp(1.45rem,2.4vw,2.4rem);line-height:1.45;margin:0 0 1.5rem}.feature blockquote{font-size:clamp(2rem,3.5vw,3.5rem)}figcaption{text-transform:uppercase;letter-spacing:.15em;font-size:.7rem}.gallery{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:420px;gap:.5rem;padding:.5rem}.gallery img{width:100%;height:100%;object-fit:cover}.gallery img:nth-child(2),.gallery img:nth-child(6){grid-row:span 2}.visit{text-align:center}.visit h2{margin-bottom:2.5rem}@media(max-width:760px){.quotes{grid-template-columns:1fr;gap:3rem}.gallery{grid-template-columns:1fr 1fr;grid-auto-rows:280px}}
+  .quotes{display:grid;grid-template-columns:1fr 1fr;gap:5rem}.quotes figure{margin:0;border-top:1px solid var(--line);padding-top:2rem}.quotes .feature{grid-row:span 2}.quotes blockquote{font-family:'Italiana',serif;font-size:clamp(1.45rem,2.4vw,2.4rem);line-height:1.45;margin:0 0 1.5rem}.feature blockquote{font-size:clamp(2rem,3.5vw,3.5rem)}figcaption{text-transform:uppercase;letter-spacing:.15em;font-size:.7rem}
+  .gallery-section{padding:clamp(4rem,7vw,7rem) clamp(.75rem,2vw,2rem);background:var(--ink);color:var(--white)}.gallery-heading{display:grid;grid-template-columns:1.4fr .6fr;align-items:end;gap:3rem;max-width:1400px;margin:0 auto clamp(3rem,6vw,6rem);padding-inline:clamp(.5rem,4vw,4rem)}.gallery-heading h2{max-width:850px;margin:0}.gallery-heading>p{max-width:430px;margin:0;color:rgba(255,253,249,.72)}
+  .gallery{columns:4 250px;column-gap:.75rem;max-width:1600px;margin:auto}.gallery-item{display:block;position:relative;width:100%;margin:0 0 .75rem;padding:0;border:0;background:var(--cream);color:var(--white);cursor:zoom-in;overflow:hidden;break-inside:avoid}.gallery-item img{width:100%;height:auto;transition:transform .45s ease,filter .45s ease}.gallery-item span{position:absolute;right:1rem;bottom:1rem;padding:.55rem .75rem;background:rgba(36,35,31,.82);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;opacity:0;transform:translateY(.4rem);transition:.25s}.gallery-item:hover img{transform:scale(1.025);filter:brightness(.82)}.gallery-item:hover span,.gallery-item:focus-visible span{opacity:1;transform:none}.gallery-item:focus-visible{outline:2px solid var(--white);outline-offset:3px}
+  .lightbox{width:100vw;max-width:none;height:100vh;max-height:none;margin:0;padding:clamp(3.5rem,6vw,5rem) clamp(3.5rem,8vw,8rem) 2rem;border:0;background:rgba(21,20,18,.96);color:var(--white);overflow:hidden}.lightbox::backdrop{background:rgba(21,20,18,.96)}.lightbox[open]{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:clamp(1rem,3vw,3rem)}.lightbox figure{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:0;margin:0}.lightbox figure img{max-width:100%;max-height:calc(100vh - 8rem);width:auto;height:auto;object-fit:contain}.lightbox figcaption{padding-top:1rem;color:rgba(255,255,255,.7)}.lightbox button{border:0;color:inherit;cursor:pointer}.lightbox-close{position:absolute;top:1.25rem;right:1.5rem;background:transparent;text-transform:uppercase;letter-spacing:.15em;font-size:.68rem;padding:.75rem}.lightbox-arrow{width:3rem;height:3rem;border-radius:50%;background:rgba(255,255,255,.12);font-size:1.35rem;transition:.2s}.lightbox-arrow:hover,.lightbox-arrow:focus-visible{background:var(--white);color:var(--ink)}:global(body.lightbox-open){overflow:hidden}.visit{text-align:center}.visit h2{margin-bottom:2.5rem}
+  @media(max-width:760px){.quotes{grid-template-columns:1fr;gap:3rem}.gallery-heading{grid-template-columns:1fr;gap:1.5rem}.gallery{columns:2 140px}.lightbox{padding:4.5rem .75rem 1rem}.lightbox[open]{grid-template-columns:1fr}.lightbox-arrow{position:absolute;top:50%;z-index:2;background:rgba(36,35,31,.7)}.lightbox-prev{left:1rem}.lightbox-next{right:1rem}.lightbox figure img{max-height:calc(100vh - 7rem)}}
 </style>
