@@ -1,10 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import BookingLink from '../components/BookingLink.astro';
 ---
 <BaseLayout title="Book a Hair Appointment in Sumner, WA | Hillary Faye Design" description="Request or schedule your next haircut, color, blonding, or extension appointment at Hillary Faye Design in Sumner, WA.">
   <header class="page-hero"><p class="eyebrow">We can’t wait to meet you</p><h1>Request an appointment.</h1></header>
   <section class="booking section">
-    <div class="booking-card"><p class="eyebrow">Existing guests</p><h2>Welcome back.</h2><p>Choose your next service and schedule your appointment online.</p><a class="button" href="#book-now">Book appointment</a></div>
+    <div class="booking-card"><p class="eyebrow">Existing guests</p><h2>Welcome back.</h2><p>Choose your next service and schedule your appointment online.</p><BookingLink class="button">Book appointment</BookingLink></div>
     <div class="booking-card warm"><p class="eyebrow">New guests</p><h2>Let’s start a conversation.</h2><p>Tell us about your hair, what you’re looking for, and your availability. Please allow up to 48 hours for Hillary to respond.</p><p class="small">A $50 non-refundable booking fee reserves your appointment and is applied to your service on the day of your visit.</p><a class="button" href="mailto:info@hillaryfayedesign.com?subject=New%20guest%20appointment%20request">Request an appointment</a></div>
   </section>
   <section class="josie"><div><p class="eyebrow">Looking for Josie Mae?</p><h2>Join the new-client waiting list.</h2></div><a class="button button-light" href="mailto:info@hillaryfayedesign.com?subject=Josie%20Mae%20waiting%20list">Sign up here</a></section>

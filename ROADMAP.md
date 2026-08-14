@@ -69,7 +69,7 @@ Validation gate:
 
 ## Sprint 4 — Booking resilience and accessibility
 
-Status: Not started
+Status: Ready for validation
 
 Goal: Make the primary conversion path reliable for every device and robust when third-party scripts fail.
 

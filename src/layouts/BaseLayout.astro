@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import BookingLink from '../components/BookingLink.astro';
 interface Props { title?: string; description?: string; robots?: string; image?: string; }
 const {
   title = 'Hair Salon in Sumner, WA | Hillary Faye Design',
@@ -59,7 +60,6 @@ const nav = [
     <meta name="description" content={description} />
     <meta name="robots" content={robots} />
     <meta name="theme-color" content="#f2eee7" />
-    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
     <link rel="icon" href={url('/favicon-32.png')} type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} sizes="180x180" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -84,26 +84,6 @@ const nav = [
     <meta name="twitter:image:alt" content="Dimensional blonde hair styled at Hillary Faye Design" />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(businessSchema)}></script>
     <title>{title}</title>
-    <!-- Boulevard Self-Booking overlay -->
-    <script is:inline>
-      (function (a) {
-        var b = {
-          businessId: 'e2268497-1ec6-4515-8d8d-a0afd7dd6855',
-        };
-
-        var c = a.createElement('script');
-        var d = a.querySelector('script');
-
-        c.src = 'https://static.joinboulevard.com/injector.min.js';
-        c.async = true;
-        c.onload = function () {
-          blvd.init(b);
-        };
-
-        d.parentNode.insertBefore(c, d);
-      })(document);
-    </script>
-    <!-- End Boulevard Self-Booking overlay -->
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -111,10 +91,10 @@ const nav = [
       <a class="wordmark" href={url('/')} aria-label="Hillary Faye Design home">
         <img src={url('/images/responsive/logo-280.webp')} width="170" height="101" alt="Hillary Faye Design" decoding="async" />
       </a>
-      <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><span class="sr-only">Menu</span></button>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><span></span><span></span><span></span></button>
       <nav id="site-nav" aria-label="Main navigation">
         {nav.map(([href, label]) => <a href={url(href)} aria-current={currentPath.endsWith(href) ? 'page' : undefined}>{label}</a>)}
-        <a class="button button-small" href="#book-now">Book appointment</a>
+        <BookingLink class="button button-small">Book appointment</BookingLink>
       </nav>
     </header>
     <main id="main"><slot /></main>
@@ -129,25 +109,89 @@ const nav = [
     <script is:inline>
       const button = document.querySelector('.menu-toggle');
       const nav = document.querySelector('#site-nav');
+      const firstNavLink = nav?.querySelector('a');
+      const closeMenu = (restoreFocus = false) => {
+        button?.setAttribute('aria-expanded', 'false');
+        button?.setAttribute('aria-label', 'Open navigation');
+        nav?.classList.remove('open');
+        if (restoreFocus) button?.focus();
+      };
       button?.addEventListener('click', () => {
         const open = button.getAttribute('aria-expanded') === 'true';
         button.setAttribute('aria-expanded', String(!open));
+        button.setAttribute('aria-label', open ? 'Open navigation' : 'Close navigation');
         nav?.classList.toggle('open', !open);
+        if (!open) firstNavLink?.focus();
       });
 
-      document.addEventListener('click', (event) => {
-        const bookingLink = event.target.closest('a[href="#book-now"]');
-        if (!bookingLink) return;
-
-        button?.setAttribute('aria-expanded', 'false');
-        nav?.classList.remove('open');
-
-        if (window.matchMedia('(max-width: 760px)').matches && window.blvd?.openBookingWidget) {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-          window.blvd.openBookingWidget();
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && nav?.classList.contains('open')) closeMenu(true);
+        if (event.key === 'Tab' && nav?.classList.contains('open')) {
+          const navLinks = [...nav.querySelectorAll('a')];
+          const lastNavLink = navLinks.at(-1);
+          if (event.shiftKey && document.activeElement === button) {
+            event.preventDefault();
+            lastNavLink?.focus();
+          } else if (!event.shiftKey && document.activeElement === lastNavLink) {
+            event.preventDefault();
+            button?.focus();
+          }
         }
-      }, true);
+      });
+      document.addEventListener('click', (event) => {
+        if (!(event.target instanceof Element)) return;
+        if (nav?.classList.contains('open') && !nav.contains(event.target) && !button?.contains(event.target)) closeMenu();
+        if (event.target.closest('#site-nav a')) closeMenu();
+      });
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 760) closeMenu();
+      });
+
+      let bookingPromise;
+      const loadBooking = () => {
+        if (window.blvd?.openBookingWidget) return Promise.resolve();
+        if (bookingPromise) return bookingPromise;
+        bookingPromise = new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          const timeout = window.setTimeout(() => reject(new Error('Booking overlay timed out')), 5000);
+          script.src = 'https://static.joinboulevard.com/injector.min.js';
+          script.async = true;
+          script.onload = () => {
+            try {
+              window.blvd.init({ businessId: 'e2268497-1ec6-4515-8d8d-a0afd7dd6855' });
+              window.clearTimeout(timeout);
+              resolve();
+            } catch (error) { reject(error); }
+          };
+          script.onerror = (error) => {
+            window.clearTimeout(timeout);
+            reject(error);
+          };
+          document.head.append(script);
+        });
+        return bookingPromise;
+      };
+      document.addEventListener('pointerover', (event) => {
+        if (event.target instanceof Element && event.target.closest('[data-booking-link]')) loadBooking().catch(() => {});
+      });
+      document.addEventListener('focusin', (event) => {
+        if (event.target instanceof Element && event.target.closest('[data-booking-link]')) loadBooking().catch(() => {});
+      });
+
+      document.addEventListener('click', async (event) => {
+        if (!(event.target instanceof Element)) return;
+        const bookingLink = event.target.closest('[data-booking-link]');
+        if (!bookingLink || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        closeMenu();
+        try {
+          await loadBooking();
+          if (!window.blvd?.openBookingWidget) throw new Error('Booking overlay unavailable');
+          window.blvd.openBookingWidget();
+        } catch {
+          window.location.assign(bookingLink.href);
+        }
+      });
     </script>
   </body>
 </html>

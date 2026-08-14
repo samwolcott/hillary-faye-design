@@ -1,0 +1,6 @@
+---
+interface Props { class?: string; }
+const { class: className } = Astro.props;
+const bookingUrl = 'https://www.joinblvd.com/b/e2268497-1ec6-4515-8d8d-a0afd7dd6855/widget?path=/cart/menu';
+---
+<a class={className} href={bookingUrl} data-booking-link><slot /></a>

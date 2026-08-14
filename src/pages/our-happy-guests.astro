@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import BookingLink from '../components/BookingLink.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const quotes = [
@@ -69,12 +70,12 @@ const gallery = Array.from({ length: 44 }, (_, index) => {
     <button class="lightbox-arrow lightbox-prev" type="button" data-prev aria-label="Previous image">←</button>
     <figure>
       <img src={gallery[0].src} width={gallery[0].width} height={gallery[0].height} alt={gallery[0].alt} data-lightbox-image />
-      <figcaption><span data-counter>1 / {gallery.length}</span></figcaption>
+      <figcaption aria-live="polite" aria-atomic="true"><span data-counter>1 / {gallery.length}</span></figcaption>
     </figure>
     <button class="lightbox-arrow lightbox-next" type="button" data-next aria-label="Next image">→</button>
   </dialog>
 
-  <section class="visit section"><p class="eyebrow">Your turn</p><h2>Good hair days start here.</h2><a class="button" href="#book-now">Book your visit</a></section>
+  <section class="visit section"><p class="eyebrow">Your turn</p><h2>Good hair days start here.</h2><BookingLink class="button">Book your visit</BookingLink></section>
 </BaseLayout>
 
 <script is:inline define:vars={{ gallery }}>
@@ -95,8 +96,6 @@ const gallery = Array.from({ length: 44 }, (_, index) => {
   };
   const closeLightbox = () => {
     dialog.close();
-    document.body.classList.remove('lightbox-open');
-    lastTrigger?.focus();
   };
   triggers.forEach((trigger, index) => {
     trigger.addEventListener('click', () => {
@@ -110,7 +109,10 @@ const gallery = Array.from({ length: 44 }, (_, index) => {
   document.querySelector('[data-prev]').addEventListener('click', () => showImage(activeIndex - 1));
   document.querySelector('[data-next]').addEventListener('click', () => showImage(activeIndex + 1));
   dialog.addEventListener('click', (event) => { if (event.target === dialog) closeLightbox(); });
-  dialog.addEventListener('close', () => document.body.classList.remove('lightbox-open'));
+  dialog.addEventListener('close', () => {
+    document.body.classList.remove('lightbox-open');
+    lastTrigger?.focus();
+  });
   dialog.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') showImage(activeIndex - 1);
     if (event.key === 'ArrowRight') showImage(activeIndex + 1);
