@@ -83,6 +83,13 @@ const nav = [
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content="Dimensional blonde hair styled at Hillary Faye Design" />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(businessSchema)}></script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-833GDXHFRX"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-833GDXHFRX');
+    </script>
     <title>{title}</title>
   </head>
   <body>
