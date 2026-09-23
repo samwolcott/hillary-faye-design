@@ -39,6 +39,21 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     expiresAt="2026-10-06T00:00:00-07:00"
     preview={import.meta.env.DEV}
   />
+  <SeasonalPromo
+    id="fall-color-refresh"
+    image={`${base}/images/fall-color-refresh-wide.jpg`}
+    mobileImage={`${base}/images/fall-color-refresh-mobile.jpg`}
+    imageWidth={1983}
+    imageHeight={793}
+    imageAlt="Fall Color Refresh with Josie: 10 percent off toner, gloss, or root touch-up, October 1 through October 15"
+    eyebrow="Fall color refresh · October 1–15"
+    heading="Rich color for the coziest season."
+    buttonLabel="Book the 10% off special"
+    finePrint="Offer valid Oct 1–15 only with stylist Josie."
+    startsAt="2026-10-06T00:00:00-07:00"
+    expiresAt="2026-10-16T00:00:00-07:00"
+    preview={import.meta.env.DEV}
+  />
   <section class="split">
     <div class="split-image"><img src={`${base}/images/responsive/salon-900.webp`} srcset={`${base}/images/responsive/salon-480.webp 480w, ${base}/images/responsive/salon-900.webp 900w, ${base}/images/salon.webp 1169w`} sizes="(max-width: 760px) 100vw, 54vw" width="1169" height="1752" alt="Inside the Hillary Faye Design salon" loading="lazy" decoding="async" /></div>
     <div class="split-copy"><p class="eyebrow">A little luxury</p><h2>Come as you are. Leave glowing.</h2><p>We believe great hair starts with listening. Every appointment is personal, relaxed, and shaped around your style, your routine, and where you want to go next.</p><a href={`${base}/our-services`}>Explore our services →</a></div>
